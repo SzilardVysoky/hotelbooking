@@ -42,14 +42,17 @@ From the project root:
 - The app will start on http://localhost:8080
 
 ## Documentation
-- ER Diagram: src/main/resources/scripts/HotelBSDiagram.pdf
+- **ER Diagram:** src/main/resources/scripts/HotelBSDiagram.pdf
 
-- SQL Script: src/main/resources/scripts/hoteldb-schema.sql
+- **SQL Script:** src/main/resources/scripts/hoteldb-schema.sql
 
-Swagger UI (no auth):
+**Swagger UI (authorization):**
+To access Swagger UI and API endpoints, use the default login credentials defined in SecurityConfig.java
    ```bash
 http://localhost:8080/swagger-ui/index.html
 ```
+- **Username** kuser
+- **Password** kakademia
 
 ## API Usage Examples
 List all Hotels
