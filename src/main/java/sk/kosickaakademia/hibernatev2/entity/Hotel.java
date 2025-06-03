@@ -1,5 +1,6 @@
 package sk.kosickaakademia.hibernatev2.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.Getter;
@@ -8,7 +9,9 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "Hotel")
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class Hotel {
 
     @Id
@@ -22,5 +25,6 @@ public class Hotel {
     private String location;
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Room> rooms;
 }
