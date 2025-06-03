@@ -1,5 +1,6 @@
 package sk.kosickaakademia.hibernatev2.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.Getter;
@@ -8,7 +9,9 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "Customer")
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class Customer {
 
     @Id
@@ -22,5 +25,6 @@ public class Customer {
     private String email;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<RoomBooking> bookings;
 }
