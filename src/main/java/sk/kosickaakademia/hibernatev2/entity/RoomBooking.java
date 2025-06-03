@@ -1,5 +1,6 @@
 package sk.kosickaakademia.hibernatev2.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import lombok.Getter;
@@ -8,7 +9,9 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "RoomBooking")
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class RoomBooking {
 
     @Id
@@ -17,6 +20,7 @@ public class RoomBooking {
 
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)
+    @JsonIgnore
     private Room room;
 
     @ManyToOne
