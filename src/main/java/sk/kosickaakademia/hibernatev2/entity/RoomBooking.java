@@ -1,6 +1,7 @@
 package sk.kosickaakademia.hibernatev2.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import java.time.LocalDate;
@@ -22,11 +23,13 @@ public class RoomBooking {
 
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @JsonIgnore
     private Room room;
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
+    @JsonIgnoreProperties(value = { "bookings" }, allowSetters = true)
     private Customer customer;
 
     @Column(name = "booking_date", nullable = false)

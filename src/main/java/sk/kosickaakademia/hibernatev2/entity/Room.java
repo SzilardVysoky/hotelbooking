@@ -1,5 +1,6 @@
 package sk.kosickaakademia.hibernatev2.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import java.util.List;
@@ -27,8 +28,10 @@ public class Room {
 
     @ManyToOne
     @JoinColumn(name = "hotel_id", nullable = false)
+    @JsonIgnoreProperties(value = { "name", "location", "rooms" }, allowSetters = true)
     private Hotel hotel;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private List<RoomBooking> bookings;
 }
