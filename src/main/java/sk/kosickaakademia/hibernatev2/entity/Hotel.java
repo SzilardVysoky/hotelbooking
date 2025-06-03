@@ -27,6 +27,6 @@ public class Hotel {
     private String location;
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private List<Room> rooms;
 }
