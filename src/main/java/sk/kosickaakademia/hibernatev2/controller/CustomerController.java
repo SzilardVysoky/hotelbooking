@@ -1,7 +1,9 @@
 package sk.kosickaakademia.hibernatev2.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sk.kosickaakademia.hibernatev2.dto.CustomerUpdateDTO;
 import sk.kosickaakademia.hibernatev2.entity.Customer;
 import sk.kosickaakademia.hibernatev2.service.CustomerService;
 
@@ -37,9 +39,18 @@ public class CustomerController {
     @PutMapping("/{id}")
     public ResponseEntity<Customer> update(
             @PathVariable Integer id,
-            @RequestBody Customer details
+            @RequestBody CustomerUpdateDTO dto
     ) {
-        return ResponseEntity.ok(customerService.update(id, details));
+        // existing or 404
+        Customer existing = customerService.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found: " + id));
+
+        existing.setName(dto.getName());
+        existing.setEmail(dto.getEmail());
+
+        // persist changes
+        Customer updated = customerService.save(existing);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
