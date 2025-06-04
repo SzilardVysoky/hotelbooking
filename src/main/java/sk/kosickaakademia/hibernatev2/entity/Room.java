@@ -28,7 +28,7 @@ public class Room {
 
     @ManyToOne
     @JoinColumn(name = "hotel_id", nullable = false)
-    @JsonIgnoreProperties(value = { "name", "location", "rooms" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "rooms" }, allowSetters = true)
     private Hotel hotel;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)

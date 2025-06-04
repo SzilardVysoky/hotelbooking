@@ -20,12 +20,22 @@ public class Hotel {
     private Integer id;
 
     @Column(nullable = false)
+    @Schema(
+            description = "Hotel name",
+            accessMode  = Schema.AccessMode.READ_WRITE,
+            example     = "Grand Plaza"
+    )
     private String name;
 
     @Column(nullable = false)
+    @Schema(
+            description = "Hotel location",
+            accessMode  = Schema.AccessMode.READ_WRITE,
+            example     = "New York"
+    )
     private String location;
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(hidden = true)
     private List<Room> rooms;
 }
