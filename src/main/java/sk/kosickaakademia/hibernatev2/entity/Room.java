@@ -7,6 +7,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sk.kosickaakademia.hibernatev2.dto.HotelIdRef;
 
 @Entity
 @Table(name = "Room")
@@ -29,6 +30,11 @@ public class Room {
     @ManyToOne
     @JoinColumn(name = "hotel_id", nullable = false)
     @JsonIgnoreProperties(value = { "rooms" }, allowSetters = true)
+    @Schema(
+            description = "Reference to an existing Hotel by its id",
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            implementation = HotelIdRef.class
+    )
     private Hotel hotel;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
