@@ -1,8 +1,14 @@
 package sk.kosickaakademia.hibernatev2.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sk.kosickaakademia.hibernatev2.dto.BookingUpdateDTO;
+import sk.kosickaakademia.hibernatev2.entity.Customer;
+import sk.kosickaakademia.hibernatev2.entity.Room;
 import sk.kosickaakademia.hibernatev2.entity.RoomBooking;
+import sk.kosickaakademia.hibernatev2.repository.CustomerRepository;
+import sk.kosickaakademia.hibernatev2.repository.RoomRepository;
 import sk.kosickaakademia.hibernatev2.service.BookingService;
 
 import java.util.List;
@@ -13,8 +19,13 @@ import java.util.Map;
 public class BookingController {
 
     private final BookingService bookingService;
-    public BookingController(BookingService bookingService) {
+    private final RoomRepository roomRepo;
+    private final CustomerRepository customerRepo;
+
+    public BookingController(BookingService bookingService, RoomRepository roomRepo, CustomerRepository customerRepo) {
         this.bookingService = bookingService;
+        this.roomRepo = roomRepo;
+        this.customerRepo = customerRepo;
     }
 
     @GetMapping
@@ -47,12 +58,27 @@ public class BookingController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateDates(
             @PathVariable Integer id,
-            @RequestBody RoomBooking details
+            @RequestBody BookingUpdateDTO dto
     ) {
-        // For simplicity: load existing, set new dates, then call createBooking logic
-        details.setId(id);
+        // 1) Load existing booking
+        RoomBooking existing = bookingService.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Booking not found: " + id));
+
+        // 2) Lookup the Room and Customer entities by their IDs
+        Room room = roomRepo.findById(dto.getRoomId())
+                .orElseThrow(() -> new EntityNotFoundException("Room not found: " + dto.getRoomId()));
+        Customer customer = customerRepo.findById(dto.getCustomerId())
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found: " + dto.getCustomerId()));
+
+        // 3) from the DTO
+        existing.setRoom(room);
+        existing.setCustomer(customer);
+        existing.setBookingDate(dto.getBookingDate());
+        existing.setEndDate(dto.getEndDate());
+
+        // 4) Re‐run, check and save
         try {
-            RoomBooking updated = bookingService.createBooking(details);
+            RoomBooking updated = bookingService.createBooking(existing);
             return ResponseEntity.ok(updated);
         } catch (IllegalStateException ex) {
             return ResponseEntity

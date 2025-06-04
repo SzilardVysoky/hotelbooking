@@ -7,6 +7,7 @@ import sk.kosickaakademia.hibernatev2.repository.RoomBookingRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookingService {
@@ -26,6 +27,10 @@ public class BookingService {
         LocalDate end   = booking.getEndDate();
 
         for (RoomBooking b : existing) {
+            // If same record (same ID), skip it
+            if (b.getId() != null && b.getId().equals(booking.getId())) {
+                continue;
+            }
 
             if (start.isBefore(b.getEndDate()) && end.isAfter(b.getBookingDate())) {
                 throw new IllegalStateException(
@@ -46,4 +51,6 @@ public class BookingService {
     public List<RoomBooking> findByRoom(Integer roomId) {
         return bookingRepo.findByRoomId(roomId);
     }
+
+    public Optional<RoomBooking> findById(Integer id) { return bookingRepo.findById(id); }
 }
