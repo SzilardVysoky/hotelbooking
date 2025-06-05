@@ -3,6 +3,7 @@ package sk.kosickaakademia.hibernatev2.controller;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sk.kosickaakademia.hibernatev2.dto.BookingCreateDTO;
 import sk.kosickaakademia.hibernatev2.dto.BookingUpdateDTO;
 import sk.kosickaakademia.hibernatev2.entity.Customer;
 import sk.kosickaakademia.hibernatev2.entity.Room;
@@ -39,12 +40,27 @@ public class BookingController {
         if (roomId != null) {
             return bookingService.findByRoom(roomId);
         }
-        // If neither provided, return all (optional: implement findAll in service)
+        // If neither provided, return all
         return bookingService.findByCustomer(customerId);
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody RoomBooking booking) {
+    public ResponseEntity<?> create(@RequestBody BookingCreateDTO dto) {
+        // Room by dto.getRoomId()
+        Room room = roomRepo.findById(dto.getRoomId())
+                .orElseThrow(() -> new EntityNotFoundException("Room not found: " + dto.getRoomId()));
+        // Customer by dto.getCustomerId()
+        Customer customer = customerRepo.findById(dto.getCustomerId())
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found: " + dto.getCustomerId()));
+
+        // New RoomBooking from the DTO
+        RoomBooking booking = new RoomBooking();
+        booking.setRoom(room);
+        booking.setCustomer(customer);
+        booking.setBookingDate(dto.getBookingDate());
+        booking.setEndDate(dto.getEndDate());
+
+        // Save
         try {
             RoomBooking saved = bookingService.createBooking(booking);
             return ResponseEntity.status(201).body(saved);
@@ -54,6 +70,7 @@ public class BookingController {
                     .body(Map.of("error", ex.getMessage()));
         }
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateDates(
