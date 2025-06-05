@@ -103,4 +103,15 @@ public class BookingController {
                     .body(Map.of("error", ex.getMessage()));
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        // check if exists first:
+        if (bookingService.findById(id).isEmpty()) {
+             throw new EntityNotFoundException("Booking not found: " + id);
+        }
+
+        bookingService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
