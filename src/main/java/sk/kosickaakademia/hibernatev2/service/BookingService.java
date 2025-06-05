@@ -53,4 +53,8 @@ public class BookingService {
     }
 
     public Optional<RoomBooking> findById(Integer id) { return bookingRepo.findById(id); }
+
+    public void delete(Integer id) {
+        bookingRepo.deleteById(id);
+    }
 }
