@@ -3,6 +3,7 @@ package sk.kosickaakademia.hibernatev2.controller;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sk.kosickaakademia.hibernatev2.dto.CustomerCreateDTO;
 import sk.kosickaakademia.hibernatev2.dto.CustomerUpdateDTO;
 import sk.kosickaakademia.hibernatev2.entity.Customer;
 import sk.kosickaakademia.hibernatev2.service.CustomerService;
@@ -31,8 +32,14 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<Customer> create(@RequestBody Customer customer) {
-        Customer saved = customerService.create(customer);
+    public ResponseEntity<Customer> create(@RequestBody CustomerCreateDTO dto) {
+
+        Customer c = new Customer();
+        c.setName(dto.getName());
+        c.setEmail(dto.getEmail());
+
+
+        Customer saved = customerService.save(c);
         return ResponseEntity.status(201).body(saved);
     }
 
