@@ -22,9 +22,19 @@ public class Room {
     private Integer id;
 
     @Column(nullable = false)
+    @Schema(
+            description = "Room number",
+            example     = "601",
+            requiredMode = Schema.RequiredMode.REQUIRED
+    )
     private String number;
 
     @Column(name = "room_type", nullable = false)
+    @Schema(
+            description = "Type of room",
+            example     = "Single",
+            requiredMode = Schema.RequiredMode.REQUIRED
+    )
     private String roomType;
 
     @ManyToOne
